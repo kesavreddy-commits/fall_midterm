@@ -1,11 +1,24 @@
 # Margin — English Fall Midterm
 
-Private ChatGPT Site containing the existing Margin study studio: study guide, all 34 vocabulary words, four-stage Vocabulary Lab, flashcards, Cram with saved progress, close reading, ten original sentences, and a full 120-question plus 13-writing-task Practice Exam.
+Static study site for the English Fall Midterm: study guide, 34-word Vocabulary Lab, flashcards, persistent Cram, close reading, ten original sentences, a comprehensive practice exam, and a separate 79-question exact supplied-question set with AI-inferred study keys.
 
-Run `node build.mjs` to create `dist/index.html`. Source study modules are in `source/site/`; `hosted.js` adapts only the hosted account/grading presentation. The original local application remains in the parent workspace and is unchanged by hosting.
+## GitHub Pages
 
-Progress uses the same validated backup format and browser storage key as the local app. Different origins and devices have separate browser saves. Use Back up progress and Restore a backup to migrate. No student browser saves or Mac credentials are included in source or deployment.
+This is already a Git repository and is ready to publish through GitHub Actions.
 
-Sites manages access and native ChatGPT sign-in. Identity is distinct from model inference permission. Automatic ChatGPT-plan grading stays in the local Mac companion; this static Site does not invoke a local server, reuse local tokens, or claim hosted grading is connected. Local rubric review, objective scoring, and imported AI feedback remain available. Hosted inference requires a separate supported connection; none is configured.
+1. Create an empty GitHub repository, then add it as `origin` and push `main`.
+2. In that repository, open **Settings → Pages** and choose **GitHub Actions** as the publishing source.
+3. Every push to `main` runs `.github/workflows/deploy-pages.yml` and publishes `dist/`.
 
-New Site audience: owner-private. Deployment source is tracked and packaged with the Sites workflow.
+The workflow uses GitHub’s current Pages actions: `configure-pages@v5`, `upload-pages-artifact@v4`, and `deploy-pages@v4`.
+
+```bash
+git remote add origin https://github.com/YOUR-ACCOUNT/YOUR-REPOSITORY.git
+git push -u origin main
+```
+
+Run `node build.mjs` locally to regenerate `dist/index.html`. Source study modules are in `source/site/`; `hosted.js` adapts the static presentation. The original local app in the parent workspace is unchanged.
+
+Progress stays in each visitor’s browser. Back up and restore progress to move it between devices or website addresses. No student data or credentials are committed.
+
+GitHub Pages is static hosting. The top-right ChatGPT button opens ChatGPT’s sign-in page, but it cannot supply ChatGPT-plan grading or authenticated user accounts without a separately authorized backend integration.
