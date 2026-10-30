@@ -1,0 +1,43 @@
+// Exact supplied question export. The compressed source text is inserted by build.mjs.
+// It is deliberately kept separate from the original practice bank: this export does
+// not include a complete answer key or the two linked Word files.
+const EXACT_SOURCE_GZIP_BASE64='__EXACT_SOURCE_GZIP_BASE64__';
+let exactSourceLoad=null;
+// These are study-key judgments made from the supplied questions, not an official key.
+// Items that depend on an omitted document remain intentionally ungraded.
+const EXACT_SOURCE_KEYS={
+ 1:'False — the term is parallelism.',2:'None of the above — personification is not listed.',3:'the central opinion or interpretation for the entire essay',4:'the arrangement of words to form phrases and sentences',5:'True',6:'the author’s name, an adjective, the function, the rhetorical term, two examples, and a strong verb',7:'fully and clearly expressed',8:'False — parenthetical citations go outside the quotation marks, before the ending punctuation.',9:'none of the above — the term is parallelism.',10:'False — analysis explains how something works; evaluation judges quality.',11:'none of the above — the missing word is exhort.',12:'Match: simple = one independent clause; compound = two or more independent clauses; complex = one independent plus a dependent clause; compound-complex = two or more independent plus a dependent clause; cumulative = main clause first, details after; periodic = main clause delayed; declarative = statement; exclamatory = strong feeling; imperative = command/request; interrogative = question.',13:'none of the above — the term is inference/infer.',14:'an -ing word placed at the beginning or end of a sentence',15:'figurative language',16:'none of the above — implicit means suggested or understood rather than directly stated.',17:'metaphor',18:'False — the rhetorical triangle is speaker, audience, and subject/purpose, not tone.',19:'none of the above — connotation is the associations or feelings suggested by a word.',20:'subject, audience, occasion, and speaker',21:'a noun (or pronoun) placed before a participle',22:'introspect',23:'level of formality, connotations, specificity, and qualifiers',24:'Diction: word choice; ethos: credibility; figurative language: nonliteral meaning; imagery: sensory language; irony: a contrast between expectation and reality; logos: logical appeal; parallelism: repeated grammatical structure; pathos: emotional appeal; tone: the author’s attitude/expression.',25:'none of the above',26:'precise and concrete words',27:'epitome',28:'all of the above',29:'parlance',30:'True',31:'none of the above — the tone is sarcastic/satirical.',32:'False — the opening modifier incorrectly attaches to Chisolm’s candidacy.',33:'logos',34:'inexplicable',35:'critical',36:'a candidate’s religious participation',37:'“uses irony to exemplify the system’s corruption”',38:'all of the above',39:'False — bananas refute/contradict that statement; they do not dissuade it.',40:'True',41:'Cannot be graded from the supplied export: “MLA Citation Example 2.docx” was referenced but not included.',42:'absolute',43:'substantiation',44:'False — the brother implied it; the narrator inferred it.',45:'“The government is best which governs least” (Thoreau 182).',46:'Speaking with excitement, Josh explained his plan to the committee',47:'False — the independent clauses need stronger punctuation than a comma before “otherwise.”',48:'Douglass looked like “a man who had escaped a den of wild beasts.” (Douglass 400).',49:'Cannot be graded from the supplied export: “Works-Cited format question.docx” was referenced but not included.',50:'False — infer means draw a conclusion; imply means suggest.',51:'specious',52:'none of the above',53:'True',54:'The latewood cells, formed later in the tree’s development, are small, appearing close together, and have thick walls.',55:'Joe’s Grandparents were born in this country; they emigrated here from Italy; they settled comfortably in Boston.',56:'The rough concrete tore through my jeans …; After midnight, he drove carefully …; and It goes without saying that Pinky Friedman … was not a particularly viable candidate.',57:'The white-pear excerpt and “His cheeks were like roses … as white as the snow.”',58:'cumulative',59:'All their hopes had abandoned them because …; Since Yochanon took Miriam …; While dancing under the moon …; and In view of the Alaskan aurora …',60:'in Jacksonville, Hurston saw people with different skin colors',61:'different attitudes about race in America',62:'superficial nature of racial differences',63:'racial groups',64:'running a race',65:'We all have the same feelings—regardless of our skin color.',66:'skin color is not what determines success',67:'forthright personal tone',68:'She looked like everyone else in her town',69:'“I am come amongst you … not for my recreation and disport …”',70:'she is not a tyrant',71:'a strong and confident ruler who can lead her troops in battle',72:'she has the courage and ruthlessness of a man to be worthy of her people’s trust',73:'give them freedom of religion',74:'avoid crowds for fear of assassination',75:'to have full control of her realm (or territory)',76:'SOAPSTone = Speaker, Occasion, Audience, Purpose, Subject, Tone; it is a framework for analyzing a rhetorical situation.',77:'Any original sentence with vivid sensory detail earns credit. Example: “Cinnamon smoke curled above the market, and rain tapped silver rhythms on the awnings.”',78:'Any precise, sensory one- or two-sentence street description earns credit. Example: “Rain pooled in the cracked gutters as buses hissed past shuttered storefronts, washing neon into the empty sidewalk.”',79:'On the far side of the Ford, I caught sight of him: blood streaming down the left side of his face from a head wound.\n\nStaggering, blinking, she inched slowly into the room in the desperate hope of reaching the couch before she passed out.\n\nThe guy was already pounding toward the corner, elbows pumping, gun pointing.\n\nWalking as fast as possible, we reached the store just before it closed.'
+};
+const EXACT_SOURCE_MAX=Object.fromEntries(Array.from({length:79},(_,i)=>[i+1,1]));
+EXACT_SOURCE_MAX[12]=10;EXACT_SOURCE_MAX[24]=10;for(let n=76;n<=79;n++)EXACT_SOURCE_MAX[n]=2;
+function addExactSourceQuestion(number,sourceText='Loading the exact supplied wording…'){
+ const id='exact-source-'+String(number).padStart(2,'0'),max=EXACT_SOURCE_MAX[number];
+ const old=questionByID(id);if(old){old.sourceText=sourceText;return old}
+ question(id,'Exact supplied questions','written','exact-source','Question '+number,[],null,'The supplied export provides this item and its point value, but no complete official answer key.',{exactSource:true,sourceText,sourceNumber:number,sourceKey:EXACT_SOURCE_KEYS[number]||'No inferred study key is available for this item.',instructions:'Enter your selected option(s), definition, or revised response. The exact source wording and choices appear above.',maxPoints:max,criteria:[{id:'source-score',label:'Points earned using your instructor’s scoring source',guide:'This exact export shows a maximum of '+max+' point'+(max===1?'':'s')+' for this item. Enter the score only after comparing against your teacher’s key, rubric, or returned work.',max}]});
+ return questionByID(id);
+}
+// Register IDs synchronously so saved exact-set attempts survive a browser reload.
+for(let number=1;number<=79;number++)addExactSourceQuestion(number);
+
+async function loadExactSourceQuestions(){
+ if(exactSourceLoad)return exactSourceLoad;
+ exactSourceLoad=(async()=>{
+  const bytes=Uint8Array.from(atob(EXACT_SOURCE_GZIP_BASE64),c=>c.charCodeAt(0));
+  const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+  const raw=await new Response(stream).text();
+  const pieces=raw.split(/^Question\s+(\d+)\s*$/m);
+  const created=[];
+  for(let i=1;i<pieces.length;i+=2){
+   const number=Number(pieces[i]),block=pieces[i+1]||'';
+   const score=block.match(/(?:Original Score:\s*\d+(?:\.\d+)?\s*\/\s*\d+\s*pts\s*Regraded Score:\s*)?(\d+(?:\.\d+)?)\s*\/\s*(\d+)\s*pts/);
+   if(!Number.isInteger(number)||!score)continue;
+   const max=Number(score[2]);
+   const body=block.slice(score.index+score[0].length).split(/\nYour Answer:\s*\n/i)[0].trim();
+   const q=addExactSourceQuestion(number,body);q.maxPoints=max;q.criteria[0].max=max;
+   created.push(q.id);
+  }
+  return created;
+ })().catch(error=>{exactSourceLoad=null;throw error});
+ return exactSourceLoad;
+}
+loadExactSourceQuestions().then(()=>{if(typeof route!=='undefined'&&route==='exam'&&state?.exam?.form==='source')render()}).catch(()=>{});
